@@ -11,12 +11,6 @@ type AddNewObjectToBucketProps = {
 }
 
 
-
-type GetFileFromBucketProps = {
-    bucketName: string,
-    objectName: string
-}
-
 export const s3Service = ({ bucketName }: { bucketName: string }) => {
     return {
         listBuckets: async () => {
@@ -39,7 +33,7 @@ export const s3Service = ({ bucketName }: { bucketName: string }) => {
 
             return response;
         },
-        listFilesInBucket: async ({ bucketName }): Promise<_Object[] | null> => {
+        listFilesInBucket: async (): Promise<_Object[] | null> => {
             console.log("listing files in bucket")
             const command = new ListObjectsCommand({
                 Bucket: bucketName,
@@ -54,7 +48,7 @@ export const s3Service = ({ bucketName }: { bucketName: string }) => {
 
             return Contents;
         },
-        getFileFromBucket: async ({ bucketName, objectName }: GetFileFromBucketProps): Promise<Uint8Array | null> => {
+        getFileFromBucket: async ({ objectName }: { objectName: string }): Promise<Buffer | null> => {
             const command = new GetObjectCommand({
                 Bucket: bucketName,
                 Key: objectName,
@@ -67,8 +61,9 @@ export const s3Service = ({ bucketName }: { bucketName: string }) => {
             }
 
 
-            const buffer: Uint8Array = await response.Body.transformToByteArray();
+            const array: Uint8Array = await response.Body.transformToByteArray();
 
+            const buffer = Buffer.from(array);
             return buffer;
 
 
@@ -76,5 +71,7 @@ export const s3Service = ({ bucketName }: { bucketName: string }) => {
     }
 
 }
+
+export default s3Service;
 
 

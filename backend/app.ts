@@ -15,7 +15,7 @@ app.use(
 app.use(express.json());
 
 app.use("/api", userRouter);
-app.use("/files", s3Router);
+app.use("/file", s3Router);
 
 const PORT = process.env.PORT || 3000;
 
