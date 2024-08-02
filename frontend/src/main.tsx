@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     element: <ViewFile />,
   },
   {
-    path: "/view-folder",
+    path: "/",
     element: <ViewFolder />,
 
   }
