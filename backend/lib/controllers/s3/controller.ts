@@ -50,13 +50,19 @@ router.get('/:key', async (req, res) => {
 
 });
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage: multer.memoryStorage() });
 router.post('/new', upload.single('file'), async (req, res, next) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded');
     }
 
     const file: Express.Multer.File = req.file;
+
+    console.log("file", file)
+
+    console.log("objectName", file.originalname)
+    console.log("contentBuffer", file.buffer)
+    console.log("contentType", file.mimetype)
 
     const response = await s3Service({ bucketName: "parthbucketbrigade" }).addNewObjectToBucket({ objectName: file.originalname, contentBuffer: file.buffer, contentType: file.mimetype });
 
