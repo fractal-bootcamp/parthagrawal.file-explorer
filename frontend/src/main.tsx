@@ -7,7 +7,6 @@ import { ClerkProvider } from '@clerk/clerk-react'
 // Import your publishable key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { UploadFile } from './routes/UploadFile.tsx'
 import { ViewFile } from './routes/ViewFile.tsx'
 import { ViewFolder } from './routes/ViewFolder.tsx'
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
@@ -25,10 +24,7 @@ import ms_sans_serif from 'react95/dist/fonts/ms_sans_serif.woff2';
 import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2';
 
 const router = createBrowserRouter([
-  {
-    path: "/upload",
-    element: <UploadFile />,
-  },
+
   {
     path: "/view-file",
     element: <ViewFile />,

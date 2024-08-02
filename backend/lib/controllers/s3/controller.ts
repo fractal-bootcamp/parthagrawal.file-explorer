@@ -72,7 +72,7 @@ router.post('/new', upload.single('file'), async (req, res, next) => {
 
 router.get('/all', async (req, res) => {
     const response = await s3Service({ bucketName: "parthbucketbrigade" }).listFilesInBucket();
-    res.send(response);
+    res.send(response.data);
 })
 
 

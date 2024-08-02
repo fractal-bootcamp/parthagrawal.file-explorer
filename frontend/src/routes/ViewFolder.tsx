@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Table, TableBody, TableDataCell, TableHead, TableHeadCell, TableRow, Window, WindowContent, WindowHeader } from "react95"
 import { useTheme } from "styled-components"
+import { UploadFile } from "../components/UploadFile"
 
 
 type ApiFile = {
@@ -19,24 +20,31 @@ export const ViewFolder = () => {
 
     const [fileData, setFileData] = useState<FileInfo[]>([])
 
+    const fetchData = async () => {
+        const response = await fetch("http://localhost:3000/file/all")
+        const data = await response.json()
+        const parsedData = data.map((file: ApiFile) => ({
+            name: file.Key,
+            size: file.Size,
+            lastModified: new Date(file.LastModified)
+        }))
+        setFileData(parsedData)
+    }
+
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:3000/file/all")
-            const data = await response.json()
-            const parsedData = data.map((file: ApiFile) => ({
-                name: file.Key,
-                size: file.Size,
-                lastModified: new Date(file.LastModified)
-            }))
-            setFileData(parsedData)
-        }
         fetchData()
     }, [])
+
+    const onUploadComplete = () => {
+        fetchData()
+    }
+
+
 
 
 
     return (
-        <div className="flex h-screen w-screen items-center justify-center">
+        <div className="flex flex-col h-screen w-screen items-center justify-center gap-3">
             <Window >
                 <WindowHeader> Folder Name </WindowHeader>
                 <WindowContent>
@@ -58,11 +66,13 @@ export const ViewFolder = () => {
                             ))}
 
                         </TableBody>
+
                     </Table>
 
                 </WindowContent>
 
             </Window>
+            <UploadFile onUploadComplete={onUploadComplete} />
 
         </div>
     )
