@@ -6,10 +6,7 @@ import s3Router from "./lib/controllers/s3/controller";
 const app = express();
 
 app.use(
-	cors({
-		origin: ['http://localhost:5173'],
-		allowedHeaders: ['Authorization', 'Content-Type'],
-	})
+	cors()
 );
 
 app.use(express.json());
