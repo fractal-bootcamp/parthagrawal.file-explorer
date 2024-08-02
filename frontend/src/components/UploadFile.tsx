@@ -22,6 +22,8 @@ export const UploadFile = ({ onUploadComplete }: { onUploadComplete: () => void 
 }
 
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const UploadModal = ({ toggleModal, onUploadComplete }: { toggleModal: React.Dispatch<React.SetStateAction<boolean>>, onUploadComplete: () => void }) => {
     const [file, setFile] = useState<File | null>(null);
 
@@ -37,7 +39,7 @@ const UploadModal = ({ toggleModal, onUploadComplete }: { toggleModal: React.Dis
         formData.append("file", file);
 
         try {
-            const response = await fetch("http://localhost:3000/file/new", {
+            const response = await fetch(BACKEND_URL + "/file/new", {
                 method: "POST",
                 body: formData,
             });
@@ -59,8 +61,9 @@ const UploadModal = ({ toggleModal, onUploadComplete }: { toggleModal: React.Dis
     return (
         <Window>
             <WindowHeader>Upload File</WindowHeader>
-            <WindowContent>
-                <TextInput type="file" onChange={handleFileChange} />
+            <WindowContent >
+                <TextInput type="file" onChange={handleFileChange} style={{ padding: '10px' }} />
+                <div style={{ margin: '10px 0' }} /> {/* Gap between input and button */}
                 <Button onClick={handleUpload}>Upload</Button>
             </WindowContent>
         </Window>
