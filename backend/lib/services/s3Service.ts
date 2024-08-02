@@ -107,11 +107,6 @@ export const s3Service = ({ bucketName }: { bucketName: string }) => {
 
 }
 
-type ReturnBufferAndMetadata = {
-    returnValue: any,
-    metadata: ResponseMetadata
-
-}
 
 export default s3Service;
 
