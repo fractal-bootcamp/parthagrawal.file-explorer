@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { Table, TableBody, TableDataCell, TableHead, TableHeadCell, TableRow, Window, WindowContent, WindowHeader } from "react95"
-import { useTheme } from "styled-components"
 import { UploadFile } from "../components/UploadFile"
 
 
@@ -19,12 +18,10 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 export const ViewFolder = () => {
 
-    const theme = useTheme();
-
     const [fileData, setFileData] = useState<FileInfo[]>([])
 
     const fetchData = async () => {
-        const response = await fetch("http://localhost:3000/file/all")
+        const response = await fetch(BACKEND_URL + "/file/all")
         const data = await response.json()
         const parsedData = data.map((file: ApiFile) => ({
             name: file.Key,

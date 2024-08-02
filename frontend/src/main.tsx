@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
 import './index.css'
 import { ClerkProvider } from '@clerk/clerk-react'
 
@@ -12,7 +11,7 @@ import { ViewFolder } from './routes/ViewFolder.tsx'
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import styled from 'styled-components'
 
-import { MenuList, MenuListItem, Separator, styleReset } from 'react95';
+import { styleReset } from 'react95';
 
 
 
