@@ -1,15 +1,14 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { Sign } from "crypto";
 
 export default function App() {
   return (
     <header>
-      <SignedOut>
-        <SignInButton />
-        Hello
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
+
+
+
+
+
     </header>
   )
 }
