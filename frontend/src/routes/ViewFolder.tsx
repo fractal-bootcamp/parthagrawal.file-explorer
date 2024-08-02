@@ -1,6 +1,38 @@
+import { useEffect, useState } from "react"
 import { Table, TableBody, TableDataCell, TableHead, TableHeadCell, TableRow, Window, WindowContent, WindowHeader } from "react95"
+import { useTheme } from "styled-components"
 
+
+type ApiFile = {
+    Key: string,
+    LastModified: string,
+    Size: number,
+    ETag: string,
+    StorageClass: string
+    Owner: {
+        ID: string
+    }
+}
 export const ViewFolder = () => {
+
+    const theme = useTheme();
+
+    const [fileData, setFileData] = useState<FileInfo[]>([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch("http://localhost:3000/file/all")
+            const data = await response.json()
+            const parsedData = data.map((file: ApiFile) => ({
+                name: file.Key,
+                size: file.Size,
+                lastModified: new Date(file.LastModified)
+            }))
+            setFileData(parsedData)
+        }
+        fetchData()
+    }, [])
+
 
 
     return (
@@ -13,17 +45,18 @@ export const ViewFolder = () => {
                             <TableRow>
                                 <TableHeadCell>Name</TableHeadCell>
                                 <TableHeadCell>Size</TableHeadCell>
-                                <TableHeadCell>Type</TableHeadCell>
                                 <TableHeadCell>Last Modified</TableHeadCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow>
-                                <TableDataCell>File Name</TableDataCell>
-                                <TableDataCell>File Size</TableDataCell>
-                                <TableDataCell>File Type</TableDataCell>
-                                <TableDataCell>Last Modified</TableDataCell>
-                            </TableRow>
+                            {fileData.map((file) => (
+                                <TableRow key={file.name}>
+                                    <TableDataCell>{file.name}</TableDataCell>
+                                    <TableDataCell>{file.size}</TableDataCell>
+                                    <TableDataCell>{file.lastModified.toString()}</TableDataCell>
+                                </TableRow>
+                            ))}
+
                         </TableBody>
                     </Table>
 

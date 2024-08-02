@@ -11,7 +11,10 @@ import { UploadFile } from './routes/UploadFile.tsx'
 import { ViewFile } from './routes/ViewFile.tsx'
 import { ViewFolder } from './routes/ViewFolder.tsx'
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import styled from 'styled-components'
+
 import { MenuList, MenuListItem, Separator, styleReset } from 'react95';
+
 
 
 /* Pick a theme of your choice */
@@ -60,13 +63,23 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
+const DesktopBackground = styled.div`
+background: ${({ theme }) => theme.desktopBackground};
+`;
+
+
+
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <GlobalStyles />
       <ThemeProvider theme={original}>
+        <DesktopBackground>
+          <RouterProvider router={router} />
 
-        <RouterProvider router={router} />
+        </DesktopBackground>
+
       </ThemeProvider>
     </ClerkProvider>
   </React.StrictMode>,
