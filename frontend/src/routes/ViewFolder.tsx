@@ -14,6 +14,9 @@ type ApiFile = {
         ID: string
     }
 }
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 export const ViewFolder = () => {
 
     const theme = useTheme();
