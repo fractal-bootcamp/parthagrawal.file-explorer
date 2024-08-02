@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     res.send('Hello file!');
 });
 
-router.get('/:key', async (req, res) => {
+router.get('/view/:key', async (req, res) => {
     const { key } = req.params;
 
     try {
@@ -71,7 +71,7 @@ router.post('/new', upload.single('file'), async (req, res, next) => {
 })
 
 router.get('/all', async (req, res) => {
-    const response = await s3Service({ bucketName: "parthbucketbrigade" }).getAllFilesFromBucket();
+    const response = await s3Service({ bucketName: "parthbucketbrigade" }).listFilesInBucket();
     res.send(response);
 })
 
