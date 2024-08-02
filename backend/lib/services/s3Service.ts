@@ -1,39 +1,61 @@
-import { _Object, GetObjectCommand, ListBucketsCommand, ListObjectsCommand, ListObjectsCommandOutput, PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
+import { _Object, Bucket, GetObjectCommand, ListBucketsCommand, ListObjectsCommand, ListObjectsCommandOutput, PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
+import type { ResponseMetadata } from "@smithy/types"; // Importing ResponseMetadata type
 import s3client from "../../utils/s3Client"
-import { U } from "vitest/dist/reporters-BU_vXAUX.js";
+import { S, U } from "vitest/dist/reporters-BU_vXAUX.js";
 
 
 
 type AddNewObjectToBucketProps = {
-    bucketName: string,
     objectName: string,
-    content: string
+    contentBuffer: Buffer,
+    contentType: string
+}
+
+type S3ServiceResponse<T> = {
+    data: T | null,
+    metadata: ResponseMetadata
 }
 
 
 export const s3Service = ({ bucketName }: { bucketName: string }) => {
     return {
-        listBuckets: async () => {
+        listBuckets: async (): Promise<S3ServiceResponse<Bucket[]>> => {
             console.log("listing buckets")
             const command = new ListBucketsCommand({});
 
-            const { Buckets } = await s3client.send(command);
+            const response = await s3client.send(command);
+            const { Buckets } = response;
 
-            return Buckets;
+            if (!Buckets) {
+                return {
+                    data: null,
+                    metadata: response.$metadata,
+                };
+            }
+
+            return {
+                data: Buckets,
+                metadata: response.$metadata
+            };
 
         },
-        addNewObjectToBucket: async ({ objectName, content, }: AddNewObjectToBucketProps): Promise<PutObjectCommandOutput> => {
+        addNewObjectToBucket: async ({ objectName, contentBuffer, contentType }: AddNewObjectToBucketProps): Promise<S3ServiceResponse<null>> => {
+
             console.log("adding...")
             const command = new PutObjectCommand({
                 Bucket: bucketName,
                 Key: objectName,
-                Body: content,
+                Body: contentBuffer,
+                ContentType: contentType
             });
             const response = await s3client.send(command);
 
-            return response;
+            return {
+                data: null,
+                metadata: response.$metadata
+            };
         },
-        listFilesInBucket: async (): Promise<_Object[] | null> => {
+        listFilesInBucket: async (): Promise<S3ServiceResponse<_Object[]>> => {
             console.log("listing files in bucket")
             const command = new ListObjectsCommand({
                 Bucket: bucketName,
@@ -43,12 +65,19 @@ export const s3Service = ({ bucketName }: { bucketName: string }) => {
 
             const { Contents } = response;
             if (!Contents) {
-                return null;
+                return {
+                    data: null,
+                    metadata: response.$metadata
+                }
             }
 
-            return Contents;
+            return {
+                data: Contents,
+                metadata: response.$metadata
+            };
         },
-        getFileFromBucket: async ({ objectName }: { objectName: string }): Promise<Buffer | null> => {
+
+        getFileFromBucket: async ({ objectName }: { objectName: string }): Promise<S3ServiceResponse<Buffer>> => {
             const command = new GetObjectCommand({
                 Bucket: bucketName,
                 Key: objectName,
@@ -57,18 +86,30 @@ export const s3Service = ({ bucketName }: { bucketName: string }) => {
             const response = await s3client.send(command);
 
             if (!response.Body) {
-                return null;
+                return {
+                    data: null,
+                    metadata: response.$metadata
+                }
             }
 
 
             const array: Uint8Array = await response.Body.transformToByteArray();
 
             const buffer = Buffer.from(array);
-            return buffer;
+            return {
+                data: buffer,
+                metadata: response.$metadata
+            }
 
 
         }
     }
+
+}
+
+type ReturnBufferAndMetadata = {
+    returnValue: any,
+    metadata: ResponseMetadata
 
 }
 
